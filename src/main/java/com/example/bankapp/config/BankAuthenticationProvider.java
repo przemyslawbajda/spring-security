@@ -1,5 +1,6 @@
 package com.example.bankapp.config;
 
+import com.example.bankapp.model.Authority;
 import com.example.bankapp.model.Customer;
 import com.example.bankapp.repository.CustomerRepository;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class BankAuthenticationProvider implements AuthenticationProvider {
@@ -34,15 +36,23 @@ public class BankAuthenticationProvider implements AuthenticationProvider {
 
         if(customer.size() > 0){
             if(passwordEncoder.matches(password, customer.get(0).getPwd())){
-                List<GrantedAuthority> authorities = new ArrayList<>();
-                authorities.add(new SimpleGrantedAuthority(customer.get(0).getRole()));
-                return new UsernamePasswordAuthenticationToken(username, password, authorities);
+                return new UsernamePasswordAuthenticationToken(username, password, getGrantedAuthorities(customer.get(0).getAuthorities()));
             }else {
                 throw new BadCredentialsException("Invalid password");
             }
         }else{
             throw new BadCredentialsException("User with that email does not exist");
         }
+    }
+
+    private List<GrantedAuthority> getGrantedAuthorities(Set<Authority> authorities){
+
+        List<GrantedAuthority> grantedAuthorities= new ArrayList<>();
+        for(Authority authority: authorities){
+            grantedAuthorities.add(new SimpleGrantedAuthority(authority.getName()));
+        }
+        return grantedAuthorities;
+
     }
 
     @Override

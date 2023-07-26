@@ -1,7 +1,10 @@
 package com.example.bankapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+
+import java.util.Set;
 
 @Entity
 public class Customer {
@@ -18,6 +21,11 @@ public class Customer {
     private String pwd;
     private String role;
     private String createDt;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER)
+    private Set<Authority> authorities;
+
 
     public int getId() {
         return id;
@@ -75,4 +83,7 @@ public class Customer {
         this.createDt = createDt;
     }
 
+    public Set<Authority> getAuthorities() {
+        return authorities;
+    }
 }
