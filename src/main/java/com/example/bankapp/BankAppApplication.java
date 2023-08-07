@@ -1,6 +1,5 @@
 package com.example.bankapp;
 
-import com.example.bankapp.constans.SecurityConstants;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
